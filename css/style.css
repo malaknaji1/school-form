@@ -53,8 +53,13 @@ body {
 	font-size: 13px;
 	margin-bottom: 3px;
 }
-#s-class,#salary{
+#s-emp-class{
 display: none;
+}
+#note{
+	color: red;
+	font-weight: lighter;
+	display: block;
 }
 .form-content .form-detail .input-text ,.form-control{
 	margin-bottom: 28px;

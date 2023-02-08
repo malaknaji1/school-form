@@ -1,4 +1,10 @@
 var type=document.getElementById('type');
+let students=[];
+let employees=[];
+let currentDate= new Date();
+currentDate.setDate(currentDate.getDate()-1);
+document.getElementById('date').max =currentDate.toISOString().split("T")[0];
+
 //classes : 
 class person{
     constructor(Name,dob,gender,birthcity){
@@ -22,6 +28,7 @@ class empolyee extends person{
     }
 }
 
+
 function showHide(){
     console.log(type.value);
     if(type.value=='student'){
@@ -37,9 +44,18 @@ function showHide(){
     }
 }
 
-document.getElementById('myform').addEventListener('submit',function(e){
-    let students=[];
-    let employees=[];
+function getAge(dateOfBirth) {
+    var today = new Date(),
+        birthDate = new Date(dateOfBirth),
+        age = today.getFullYear() - birthDate.getFullYear(),
+        months = today.getMonth() - birthDate.getMonth();
+    if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+  }
+
+  function validateForm() {
     const name=document.getElementById('name').value;
     const dob=document.getElementById('date').value;
     const gender=document.getElementById('gender').value;
@@ -49,23 +65,46 @@ document.getElementById('myform').addEventListener('submit',function(e){
     const type = v.options[v.selectedIndex].text;
     const student_class=document.getElementById('st-emp-class').value;
     const empolyee_sal=student_class;
-    console.log(name,dob,gender,city,type,student_class);
-
-     if(type==='Student'){
-         const student1=new student(name,dob,gender,city,student_class);
-         studentAddToList(student1);
-         students.push(student1);
-     }
-     else{
-        const emp=new empolyee(name,dob,gender,city,empolyee_sal);
-        employees.push(emp);
-        empAddToList(emp);
+    const note=document.getElementById('note');
+    const age=getAge(dob);
+    
+    if(type==='Student'){
+        if(age<18 && age>9){
+        const student1=new student(name,dob,gender,city,student_class);
+        studentAddToList(student1);
+        students.push(student1);
+        clearin();
+        note.style.display='none';
+        return false;
+        
+        }
+        else{
+            note.innerHTML="Student age must be between 9 and 18 . the age that you entered is "+age;
+            note.style.display='block'; 
+            return false;
+        }
+        
     }
-    clearin();
-    e.preventDefault();
+    else{
+        if(age>22){
+            const emp=new empolyee(name,dob,gender,city,empolyee_sal);
+            employees.push(emp);
+            empAddToList(emp);
+            clearin();
+            note.style.display='none';
+            return false;
+        }
+        else{
+            note.innerHTML="Employee age must be more than 22 . the age that you entered is "+age;
+            note.style.display='block'; 
+            return false;
+        }
 
-})
-
+   }
+   
+  }
+  
+  
 
 
 function studentAddToList(student){
@@ -81,7 +120,6 @@ function studentAddToList(student){
    st_tbl.appendChild(row);
 
 }
-
 function clearin(){
     document.getElementById('name').value='';
     document.getElementById('date').value='';
@@ -89,6 +127,8 @@ function clearin(){
     document.getElementById('gender').value='';
     document.getElementById('type').value='';
     document.getElementById('place').value='';
+    document.getElementById('s-emp-class').style.display='none';
+    
     
 
 }
